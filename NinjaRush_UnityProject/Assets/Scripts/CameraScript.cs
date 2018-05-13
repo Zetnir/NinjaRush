@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour {
 
-    private Vector3 menuViewPos = new Vector3(0.1f, -2.45f, -10);
-    private Quaternion menuViewRot = Quaternion.Euler(10, 0, 0);
+    private Vector3 menuViewPos = new Vector3(0.1f, -2.45f, 47);
+    private Quaternion menuViewRot = Quaternion.Euler(10, 180, 0);
 
-    private Vector3 inGameViewPos = new Vector3(0.2f, 4f, -5f);
-    private Quaternion inGameViewRot = Quaternion.Euler(70, 0, 0);
+    private Vector3 inGameViewPos = new Vector3(0.2f, 4f, 42f);
+    private Quaternion inGameViewRot = Quaternion.Euler(70, 180, 0);
 
     private float speedMovement = 2f;
     private float speedRotation = 2f;
