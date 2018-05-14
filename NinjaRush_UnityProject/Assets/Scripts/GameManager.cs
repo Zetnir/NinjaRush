@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour {
 
     private int previousRandPos = -1;
 
+    public SpawnScript spawnScript;
     // Use this for initialization
     void Start () {
         for(uint i =0; i < enemiesPos.Length; i++)
@@ -33,7 +34,10 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        if (!spawnScript.GetIsColliding() && gameState == GameState.INGAME)
+        {
+            SpawnEnemy();
+        }
     }
 
     public void SetGameState(GameState newState)

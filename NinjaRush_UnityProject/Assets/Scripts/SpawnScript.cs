@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnScript : MonoBehaviour {
 
     private bool isColliding;
+
 	// Use this for initialization
 	void Start () {
 		
@@ -12,16 +13,27 @@ public class SpawnScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
+
+    public bool GetIsColliding()
+    {
+        return isColliding;
+    }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other) ;
+        isColliding = true;
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        isColliding = true;
     }
 
     void OnTriggerExit(Collider other)
     {
-
+        isColliding = false;
     }
+
 }
