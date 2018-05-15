@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 65159477239114302}
   - component: {fileID: 114616804360162770}
   - component: {fileID: 54174964903309302}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Helmet_Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}

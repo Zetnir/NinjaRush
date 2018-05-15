@@ -19,4 +19,30 @@ public class UIScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public void SetInGameUI()
+    {
+        Menu.gameObject.SetActive(false);
+        PlayerInfo.gameObject.SetActive(false);
+        InGame.gameObject.SetActive(true);
+        EndGame.gameObject.SetActive(false);
+    }
+
+    public void SetEndGameUI()
+    {
+        Menu.gameObject.SetActive(false);
+        PlayerInfo.gameObject.SetActive(true);
+        InGame.gameObject.SetActive(false);
+        EndGame.gameObject.SetActive(true);
+
+    }
+
+    public void SetMenu()
+    {
+        Menu.gameObject.SetActive(true);
+        PlayerInfo.gameObject.SetActive(true);
+        InGame.gameObject.SetActive(false);
+        EndGame.gameObject.SetActive(false);
+
+    }
 }

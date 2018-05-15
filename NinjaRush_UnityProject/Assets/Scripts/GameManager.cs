@@ -12,31 +12,48 @@ public class GameManager : MonoBehaviour {
         ENDGAME
     }
 
-    private GameState gameState;
-
-    public List<GameObject> EnemiesPrefab;
-    public List<GameObject> Enemies;
-
-    public Vector3[] enemiesPos = new Vector3[4];
-
-    private int nbEnemy = 0;
-
-    private int previousRandPos = -1;
+    public GameState gameState;
 
     public SpawnScript spawnScript;
+    public EndLineScript endLineScript;
+
+    public UIScript uIScript;
+
+    LayerMask enemyLayer;
     // Use this for initialization
-    void Start () {
-        for(uint i =0; i < enemiesPos.Length; i++)
-        {
-            enemiesPos[i] = new Vector3(i - 1f, -3.42f, 13.75f);
-        }
+    void Start() {
+        enemyLayer = LayerMask.GetMask("Enemy");
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (!spawnScript.GetIsColliding() && gameState == GameState.INGAME)
+
+    // Update is called once per frame
+    void Update() {
+        switch (gameState)
         {
-            SpawnEnemy();
+            case GameState.MENU:
+                break;
+            case GameState.INGAME:
+
+                if (!spawnScript.GetIsColliding())
+                {
+                    spawnScript.SpawnEnemy();
+                }
+
+                if (endLineScript.GetIsColliding())
+                {
+                    SetGameState(GameManager.GameState.ENDGAME);
+                    PutInPause();
+                    uIScript.SetEndGameUI();
+                }
+
+                if(Input.GetMouseButtonDown(0))
+                {
+                    ClickOnScreen();
+                }
+                break;
+            case GameState.INPAUSE:
+                break;
+            case GameState.ENDGAME:
+                break;
         }
     }
 
@@ -50,17 +67,25 @@ public class GameManager : MonoBehaviour {
         return gameState;
     }
 
-    public void SpawnEnemy()
+    public void PutInPause()
     {
-        int newRandPos;
-        do
-        {
-            newRandPos = (int)Random.Range(0, 4);
-        } while (newRandPos == previousRandPos);
-        int newRandEnemy = (int)Random.Range(0, EnemiesPrefab.Count);
-
-        Enemies.Add(Instantiate(EnemiesPrefab[newRandEnemy], enemiesPos[newRandPos], Quaternion.Euler(new Vector3(0, 0, 0))));
-        previousRandPos = newRandPos;
+        Time.timeScale = 0;
     }
 
+    public void ClickOnScreen()
+    {
+        RaycastHit hit;
+        Ray ray = /*Camera.main.ScreenPointToRay(Input.GetTouch(0).position)*/Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out hit, 100.0f,enemyLayer.value))
+        {
+            if(hit.transform)
+            {
+                spawnScript.DestroyEnemy(hit.transform.gameObject);
+                Debug.DrawLine(hit.transform.position, Input.mousePosition);
+            }
+        }
+    }
+
+   
 }

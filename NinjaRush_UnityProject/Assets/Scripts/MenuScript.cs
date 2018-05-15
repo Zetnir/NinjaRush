@@ -25,8 +25,6 @@ public class MenuScript : MonoBehaviour {
     public void LaunchGame()
     {
         gameManager.SetGameState(GameManager.GameState.INGAME);
-        UI.Menu.gameObject.SetActive(false);
-        UI.PlayerInfo.gameObject.SetActive(false);
-        UI.InGame.gameObject.SetActive(true);
+        UI.SetInGameUI();
     }
 }
