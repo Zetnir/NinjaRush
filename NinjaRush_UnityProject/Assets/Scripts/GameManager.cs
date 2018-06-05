@@ -16,13 +16,12 @@ public class GameManager : MonoBehaviour {
 
     public SpawnScript spawnScript;
     public EndLineScript endLineScript;
-
+    public PlayerScript playerScript;
     public UIScript uIScript;
 
-    LayerMask enemyLayer;
+    private bool isLaunch = false;
     // Use this for initialization
     void Start() {
-        enemyLayer = LayerMask.GetMask("Enemy");
     }
 
     // Update is called once per frame
@@ -30,29 +29,47 @@ public class GameManager : MonoBehaviour {
         switch (gameState)
         {
             case GameState.MENU:
+                spawnScript.gameObject.SetActive(false);
+                isLaunch = false;
+                playerScript.playerStates = PlayerScript.PlayerStates.TURN_TO_MENU;
                 break;
-            case GameState.INGAME:
 
-                if (!spawnScript.GetIsColliding())
+            case GameState.INGAME:
+                spawnScript.gameObject.SetActive(true);
+                
+                if(!isLaunch)
                 {
-                    spawnScript.SpawnEnemy();
+                    playerScript.playerStates = PlayerScript.PlayerStates.RUN;
+                    isLaunch = true;
                 }
 
-                if (endLineScript.GetIsColliding())
+                PlayerGettingHit();
+
+                if (playerScript.GetIsDead())
                 {
                     SetGameState(GameManager.GameState.ENDGAME);
-                    PutInPause();
+                    Time.timeScale = 0;
                     uIScript.SetEndGameUI();
                 }
 
-                if(Input.GetMouseButtonDown(0))
+                if(Input.GetMouseButton(0) )//|| Input.GetTouch(0).tapCount == 1)
                 {
-                    ClickOnScreen();
+                    playerScript.ClickOnScreen();
                 }
+
+                SynchUiPoints();
                 break;
+
             case GameState.INPAUSE:
+                spawnScript.gameObject.SetActive(false);
                 break;
+
             case GameState.ENDGAME:
+                playerScript.ResetHP();
+                uIScript.InGame.ResetHP();
+                spawnScript.gameObject.SetActive(false);
+                playerScript.ResetScore();
+                isLaunch = false;
                 break;
         }
     }
@@ -67,25 +84,19 @@ public class GameManager : MonoBehaviour {
         return gameState;
     }
 
-    public void PutInPause()
+   public void SynchUiPoints()
     {
-        Time.timeScale = 0;
+        uIScript.InGame.SetScore(playerScript.GetScore());
     }
 
-    public void ClickOnScreen()
+    public void PlayerGettingHit()
     {
-        RaycastHit hit;
-        Ray ray = /*Camera.main.ScreenPointToRay(Input.GetTouch(0).position)*/Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, 100.0f,enemyLayer.value))
+        if(endLineScript.GetIsColliding() && endLineScript.GetNbEnemiesCol() == 1)
         {
-            if(hit.transform)
-            {
-                spawnScript.DestroyEnemy(hit.transform.gameObject);
-                Debug.DrawLine(hit.transform.position, Input.mousePosition);
-            }
+            endLineScript.SetNbEnemiesCol(0);
+            playerScript.LoseHP();
+            uIScript.InGame.LoseHP();
         }
     }
-
    
 }

@@ -8,31 +8,13 @@ public class EnemyScript : MonoBehaviour {
     /////!\utiliser le polymorphisme pour les utiliser OnFight()        /!\\\\\\\
     /////!\à partir d'un pointeur dans spawnscript de type EnemyScript  /!\\\\\\\
 
-    public enum EnemyType
-    {
-        BASIC,
-        ARMOR,
-        HELMET
-    }
 
-    public EnemyType enemyType;
+    private float actualSpeed_;
+    private bool isDead_ = false;
 
-    private float speed = 5f;
     // Use this for initialization
     void Start() {
-        switch(gameObject.name)
-        {
-            case "Basic_Enemy(Clone)":
-                enemyType = EnemyType.BASIC;
-                break;
-            case "Armor_Enemy(Clone)":
-                enemyType = EnemyType.ARMOR;
-                break;
-            case "Helmet_Enemy(Clone)":
-                enemyType = EnemyType.HELMET;
-                break;
 
-        }
     }
 
     // Update is called once per frame
@@ -42,23 +24,43 @@ public class EnemyScript : MonoBehaviour {
 
     public void Movement()
     {
-        float movementSpeed = speed * Time.deltaTime;
+        float movementSpeed = actualSpeed_ * Time.deltaTime;
         transform.Translate(new Vector3(0, 0, movementSpeed));
     }
 
-    public void OnFight()
+    public void SetActualSpeed(float speed)
     {
-        switch(enemyType)
-        {
-            case EnemyType.BASIC:
-                Destroy(gameObject);
-                break;
-            case EnemyType.ARMOR:
-                Destroy(gameObject);
-                break;
-            case EnemyType.HELMET:
-                Destroy(gameObject);
-                break;
-        }
+        actualSpeed_ = speed; ;
     }
+
+    public float GetActualSpeed()
+    {
+        return actualSpeed_;
+    }
+
+    public bool GetIsDead()
+    {
+        return isDead_;
+    }
+
+    public void SetIsDead(bool val)
+    {
+        isDead_ = val;
+    }
+
+    public virtual int OnFight()
+    {
+        return 0;
+    }
+
+    public virtual int GetPoints()
+    {
+        return 0;
+    }
+
+    public virtual void SetPoints(int points)
+    {
+
+    }
+
 }

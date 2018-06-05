@@ -45,4 +45,5 @@ public class UIScript : MonoBehaviour {
         EndGame.gameObject.SetActive(false);
 
     }
+
 }

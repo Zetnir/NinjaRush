@@ -28,6 +28,7 @@ public class EndGameScript : MonoBehaviour {
     public void ReLaunchGame()
     {
         gameManager.spawnScript.DestroyAll();
+        gameManager.spawnScript.ResetSpeed();
         gameManager.spawnScript.SetIsColliding(false);
         gameManager.endLineScript.SetIsColliding(false);
 

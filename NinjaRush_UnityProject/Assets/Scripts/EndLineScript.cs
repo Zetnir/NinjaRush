@@ -6,7 +6,9 @@ public class EndLineScript : MonoBehaviour {
 
     public bool isColliding;
 
-    public GameManager gameManager;
+    public GameObject actualHit;
+    public int nbEnemiesCol = 0;
+    //public GameManager gameManager;
 	// Use this for initialization
 	void Start () {
 		
@@ -25,17 +27,40 @@ public class EndLineScript : MonoBehaviour {
     {
         isColliding = val;
     }
+
     void OnTriggerEnter(Collider collider)
     {
-        isColliding = true;
+        if (collider.tag == "Enemy")
+        {
+            if(actualHit != collider.gameObject)
+            {
+                nbEnemiesCol++;
+                actualHit = collider.gameObject;
+            }
+            SetIsColliding(true);
+        }
     }
     void OnTriggerStay(Collider collider)
     {
-        isColliding = true;
+        if (collider.tag == "Enemy")
+            SetIsColliding(true);
     }
     void OnTriggerExit(Collider collider)
     {
-        isColliding = false;
+        if (collider.tag == "Enemy")
+        {
+            SetIsColliding(false);
+        }
+    }
+
+    public int GetNbEnemiesCol()
+    {
+        return nbEnemiesCol;
+    }
+
+    public void SetNbEnemiesCol(int val)
+    {
+        nbEnemiesCol = val;
     }
 
 }
