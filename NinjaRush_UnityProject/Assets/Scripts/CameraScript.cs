@@ -13,7 +13,6 @@ public class CameraScript : MonoBehaviour {
     private float speedMovement = 2f;
     private float speedRotation = 2f;
 
-    public GameManager gameManager;
     // Use this for initialization
     void Start () {
 
@@ -21,29 +20,24 @@ public class CameraScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        switch (gameManager.GetGameState())
-        {
-            case GameManager.GameState.MENU:
-                SetMenuView();
-                break;
-            case GameManager.GameState.INGAME:
-                SetInGameView();
-                break;
-            case GameManager.GameState.ENDGAME:
-                break;
 
-        }
     }
 
     public void SetMenuView()
     {
-        transform.position = Vector3.Lerp(transform.position, menuViewPos, speedMovement * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, menuViewRot, speedRotation * Time.deltaTime);
+        if(transform.position != menuViewPos && transform.rotation!= menuViewRot)
+        {
+            transform.position = Vector3.Lerp(transform.position, menuViewPos, speedMovement * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, menuViewRot, speedRotation * Time.deltaTime);
+        }
     }
 
     public void SetInGameView()
     {
-        transform.position = Vector3.Lerp(transform.position, inGameViewPos, speedMovement * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, inGameViewRot, speedRotation * Time.deltaTime);
+        if (transform.position != inGameViewPos && transform.rotation != inGameViewRot)
+        {
+            transform.position = Vector3.Lerp(transform.position, inGameViewPos, speedMovement * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, inGameViewRot, speedRotation * Time.deltaTime);
+        }
     }
 }

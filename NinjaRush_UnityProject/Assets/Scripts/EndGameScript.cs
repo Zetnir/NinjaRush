@@ -2,11 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class EndGameScript : MonoBehaviour {
 
     public GameManager gameManager;
     public UIScript uIScript;
+
+    public Button Video;
+    public Button Rejouer;
+    public Button Menu;
+    public Slider Temps;
+    public Button Ressuciter;
+    public Text Score;
+    public Text NewHighScore;
 
     private string currentScene = "Scene_Ludo";
     // Use this for initialization
@@ -19,6 +28,23 @@ public class EndGameScript : MonoBehaviour {
 
     }
 
+    public void ResetEndGame()
+    {
+
+    }
+    public void ShowScore(int score,int dataScore)
+    {
+        Score.text = score.ToString() + "m";
+        if (score > dataScore)
+            ShowNewHighScore();
+    }
+
+    void ShowNewHighScore()
+    {
+        NewHighScore.gameObject.SetActive(true);
+    }
+
+    //A changer ne pas reload la scene
     public void GoToMenu()
     {
         SceneManager.LoadScene(currentScene);

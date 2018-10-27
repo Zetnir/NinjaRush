@@ -1,0 +1,33 @@
+2 phases GamePlay:
+-Smash Defense:
+	-Enemies:
+		-Move:
+			-Part du haut pour arriver en bas avec une vitesse qui augmente
+		-Fighting way:
+			-Basic: 1 Click and death
+			-Armor: Keep pressure until the enemy die
+			-Helmet: 2 Click and death
+		-When the player Hit:
+			-Give Points
+			-Detroy the enemy
+		-When it hit the player:
+			-Make him loose 1HP
+			-Destroy the enemy
+	-Player:
+		-Move : 
+			-Throw shuriken on click(Distance)
+			-fighting with katana on pressure(Melee)
+	-UI Elements:
+		-Pause:
+			-Put the time scale at 0
+			-Show the Pause UI Panel
+		-HP:
+			-Show 3 hearth at the beginning
+			-Loose one hearth when the player is getting hurt
+		-Score:
+			-Increase for each Enemy that the player killed:
+				-Basic: 1 point
+				-Armor: 3points
+				-Helmet: 2points
+		
+-Super Star Fish style:

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EndLineScript : MonoBehaviour {
 
-    public bool isColliding;
+    public bool isCollidingEnemies;
 
     public GameObject actualHit;
     public int nbEnemiesCol = 0;
@@ -21,11 +21,11 @@ public class EndLineScript : MonoBehaviour {
 
     public bool GetIsColliding()
     {
-        return isColliding;
+        return isCollidingEnemies;
     }
     public void SetIsColliding(bool val)
     {
-        isColliding = val;
+        isCollidingEnemies = val;
     }
 
     void OnTriggerEnter(Collider collider)

@@ -12,47 +12,58 @@ public class GameManager : MonoBehaviour {
         ENDGAME
     }
 
-    public GameState gameState;
+    private GameState gameState;
 
     public SpawnScript spawnScript;
     public EndLineScript endLineScript;
     public PlayerScript playerScript;
     public UIScript uIScript;
+    public CameraScript cameraScript;
 
-    private bool isLaunch = false;
+    private bool gameLaunched = false;
     // Use this for initialization
     void Start() {
     }
 
-    // Update is called once per frame
-    void Update() {
-        switch (gameState)
+    //Set the action for each state
+    void ActionState(GameState state)
+    {
+        switch (state)
         {
             case GameState.MENU:
                 spawnScript.gameObject.SetActive(false);
-                isLaunch = false;
+                gameLaunched = false;
                 playerScript.playerStates = PlayerScript.PlayerStates.TURN_TO_MENU;
+                cameraScript.SetMenuView();
+                uIScript.SetMenuUI();
                 break;
 
             case GameState.INGAME:
                 spawnScript.gameObject.SetActive(true);
-                
-                if(!isLaunch)
+
+                //Put the player in the running state
+                if (!gameLaunched)
                 {
                     playerScript.playerStates = PlayerScript.PlayerStates.RUN;
-                    isLaunch = true;
+                    playerScript.ResetScore();
+                    gameLaunched = true;
                 }
 
+                //Set the camera for the inGameView
+                cameraScript.SetInGameView();
+
+                //Check if the player is getting hit during the game
                 PlayerGettingHit();
 
+                //Switch for the EndGame display when the player died
                 if (playerScript.GetIsDead())
                 {
                     SetGameState(GameManager.GameState.ENDGAME);
                     Time.timeScale = 0;
-                    uIScript.SetEndGameUI();
                 }
 
-                if(Input.GetMouseButton(0) )//|| Input.GetTouch(0).tapCount == 1)
+
+                if (Input.GetMouseButton(0) /*|| Input.GetTouch(0).tapCount == 1*/)
                 {
                     playerScript.ClickOnScreen();
                 }
@@ -65,13 +76,23 @@ public class GameManager : MonoBehaviour {
                 break;
 
             case GameState.ENDGAME:
+                uIScript.SetEndGameUI();
+                //Essaie d'Afficher newHighScore mais il faut reset le text quand ce n'est pas new highscore
+                if(gameLaunched)
+                    uIScript.EndGame.ShowScore(playerScript.GetScore(),playerScript.data.GetMaxScore());
                 playerScript.ResetHP();
                 uIScript.InGame.ResetHP();
                 spawnScript.gameObject.SetActive(false);
-                playerScript.ResetScore();
-                isLaunch = false;
+                gameLaunched = false;
+                //DefineMaxScore after gameLauched false to not change the showed score
+                playerScript.data.DefineMaxScore(playerScript.GetScore());
                 break;
         }
+    }
+
+    // Update is called once per frame
+    void Update() {
+        ActionState(gameState);
     }
 
     public void SetGameState(GameState newState)

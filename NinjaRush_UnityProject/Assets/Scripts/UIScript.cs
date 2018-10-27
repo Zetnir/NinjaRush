@@ -37,7 +37,7 @@ public class UIScript : MonoBehaviour {
 
     }
 
-    public void SetMenu()
+    public void SetMenuUI()
     {
         Menu.gameObject.SetActive(true);
         PlayerInfo.gameObject.SetActive(true);

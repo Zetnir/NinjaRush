@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 public class PlayerScript : MonoBehaviour {
 
@@ -23,6 +25,7 @@ public class PlayerScript : MonoBehaviour {
     private float speedRotation = 2f;
 
     public GameObject fXSmoke;
+
     public enum PlayerStates
     {
         IDLE,
@@ -35,7 +38,39 @@ public class PlayerScript : MonoBehaviour {
     public PlayerStates playerStates = PlayerStates.IDLE;
 
     public Animator anim;
+
+    [System.Serializable]
+    public class SavingData
+    {
+        int maxScore=0;
+        int pieces=0;
+        int resurection=0;
+
+        public SavingData(SavingData newData)
+        {
+            maxScore = newData.maxScore;
+            pieces = newData.pieces;
+            resurection = newData.resurection;
+        }
+
+        public int GetMaxScore()
+        {
+            return maxScore;
+        }
+
+        /// <summary>
+        /// Change le score max si le score passé en parametre est plus élevé
+        /// </summary>
+        /// <param name="score"></param>
+        public void DefineMaxScore(int score)
+        {
+            if (score > maxScore)
+                maxScore = score;
+        }
+    }
+    public SavingData data;
     // Use this for initialization
+
     void Start() {
         enemyLayer = LayerMask.GetMask("Enemy");
         fXSmoke.SetActive(false);
@@ -109,11 +144,11 @@ public class PlayerScript : MonoBehaviour {
                     Vector3 hitPosition = hit.transform.GetChild(0).position;
                     transform.position =new Vector3(hitPosition.x, hitPosition.y, hitPosition.z+0.75f);
                     timeDelay = Time.time;
-                    if(!isSmoking)
-                    {
-                        fXSmoke.SetActive(true);
-                        isSmoking = true;
-                    }
+                    //if(!isSmoking)
+                    //{
+                    //    fXSmoke.SetActive(true);
+                    //    isSmoking = true;
+                    //}
                 }
                 else
                 {
@@ -131,8 +166,7 @@ public class PlayerScript : MonoBehaviour {
     }
     public void ScoreAugmentation(int points)
     {
-        int newScore = GetScore() + points;
-        SetScore(newScore);
+        SetScore(score_ + points);
     }
 
     public int GetScore()
@@ -162,15 +196,9 @@ public class PlayerScript : MonoBehaviour {
 
     public void LoseHP()
     {
-        if(playerHP > 1)
-        {
-            playerHP--;
-        }
-        else
-        {
-            playerHP--;
+        playerHP--;
+        if (playerHP < 1)
             SetIsDead(true);
-        }
     }
 
     public void ResetHP()
@@ -191,4 +219,23 @@ public class PlayerScript : MonoBehaviour {
         transform.position =standardPosition;
         transform.rotation = Quaternion.Lerp(transform.rotation, inGameRotation, speedRotation * Time.deltaTime);
     }
+
+    public void WriteData()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream stream = new FileStream(Application.persistentDataPath + "/data.sav", FileMode.Create);
+        SavingData newData = new SavingData(data);
+        bf.Serialize(stream, newData);
+        stream.Close();
+    }
+
+    public void ReadData()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream stream = new FileStream(Application.persistentDataPath + "/data.sav", FileMode.Open);
+        SavingData oldData = bf.Deserialize(stream) as SavingData;
+        data = oldData;
+        stream.Close();
+    }
+
 }
